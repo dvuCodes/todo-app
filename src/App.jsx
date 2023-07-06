@@ -16,15 +16,17 @@ function App() {
   // state to track filtered task
   const [filtered, setFiltered] = useState([])
   // state to store completed task
-  const [completedTask, setCompletedTask] = useState([])
 
   // state to track new todo task
   const [text, setText] = useState("")
 
+  // state to track darkMode themes
   const [theme, setTheme] = useState(() => {
     const activeTheme = localStorage.getItem("theme")
     return activeTheme || "light"
   })
+
+  // state to track if a task isCompleted
 
   const taskInput = useRef()
 
@@ -69,6 +71,7 @@ function App() {
       setToDo={setToDo}
       theme={theme}
       isFirst={index === 0} // Check if it's the first element
+      isComplete={task.isComplete}
     />
   ))
   // clear complete todo task
@@ -102,11 +105,7 @@ function App() {
         ) : (
           <NoTask />
         )}
-        <Footer
-          setFiltered={setFiltered}
-          todo={todo}
-          completedTask={completedTask}
-        />
+        <Footer setFiltered={setFiltered} todo={todo} />
       </div>
       {/* Footer goes here */}
     </>

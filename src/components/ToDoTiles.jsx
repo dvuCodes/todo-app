@@ -3,7 +3,15 @@ import binDark from "../assets/delete-bin-fill.svg"
 import binLight from "../assets/delete-bin-line.svg"
 import iconTick from "../assets/icon-check.svg"
 
-const ToDoTiles = ({ taskName, id, setToDo, todo, theme, isFirst }) => {
+const ToDoTiles = ({
+  taskName,
+  id,
+  setToDo,
+  todo,
+  theme,
+  isFirst,
+  isComplete,
+}) => {
   const [isClicked, setIsClicked] = useState(false)
 
   const handleTaskClick = (id) => {
@@ -24,32 +32,25 @@ const ToDoTiles = ({ taskName, id, setToDo, todo, theme, isFirst }) => {
     setToDo((preList) => todo.filter((task) => task.id !== id))
   }
 
-  let iconCheckStyle = {
-    backgroundImage: `url(${iconTick})`,
-  }
-
-  //   change isComplete to true
-  //   check if taskId matches the selected taskId
-  // if matches, we want to update(map) todo (setToDo) to not include that id
-
+  console.log(isComplete)
   return (
     <li
       className={`flex gap-4 px-5 py-3 items-center transition-all duration-400 font-semibold dark:bg-slate-700 dark:text-slate-400 rounded-bl-none rounded-br-none ${
         isFirst ? "rounded-t-lg" : ""
-      }`}
+      } `}
     >
       {/* button to close task */}
       <div className="button-wrapper">
         {" "}
         <button
           className={`w-7 h-7 flex items-center justify-center rounded-full bg-transparent border-2 ${
-            isClicked
+            isComplete === true
               ? "bg-no-repeat bg-contain bg-center bg-gradient-to-br from-blue-400 to-pink-500"
               : ""
           }`}
           onClick={() => handleTaskClick(id)}
         >
-          {isClicked ? (
+          {isComplete === true ? (
             <img src={iconTick} className="w-3 absolute animate-pop" />
           ) : (
             ""
@@ -59,8 +60,8 @@ const ToDoTiles = ({ taskName, id, setToDo, todo, theme, isFirst }) => {
 
       {/* task name */}
       <p
-        className={`break-words overflow-auto text-base ${
-          isClicked ? "line-through" : ""
+        className={`break-words overflow-auto ${
+          isComplete === true ? "line-through" : ""
         }`}
       >
         {taskName}
