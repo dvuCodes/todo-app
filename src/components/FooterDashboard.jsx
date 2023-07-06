@@ -2,7 +2,7 @@ import React from "react"
 
 export const FooterDashboard = ({ todo, onClearCompleteClick }) => {
   return (
-    <li className="flex justify-between px-5 items-center w-full h-14 text-center transition-all duration-400 font-semibold rounded-bl-lg rounded-br-lg text-sm md:text-base md:hidden dark:bg-slate-700 dark:text-slate-200">
+    <li className="flex justify-between px-5 items-center w-full h-14 text-center transition-all duration-400 font-semibold rounded-bl-lg rounded-br-lg text-sm md:text-base dark:bg-slate-700 dark:text-slate-200">
       <p>
         {todo.length} item{todo.length > 1 ? "s" : ""} left
       </p>
