@@ -4,6 +4,7 @@ import ToDoTiles from "./components/ToDoTiles"
 import Header from "./components/Header"
 import NoTask from "./components/NoTask"
 import Footer from "./components/Footer"
+import FooterDashboard from "./components/FooterDashboard"
 
 function App() {
   // state to store todo task
@@ -25,9 +26,15 @@ function App() {
     return activeTheme || "light"
   })
 
+  const taskInput = useRef()
+
+  // caching to-do incase list gets exceptionally large
   useMemo(() => todo, [todo])
 
-  const taskInput = useRef()
+  useEffect(() => {
+    document.querySelector("body").classList.remove("dark", "light")
+    document.querySelector("body").classList.add(theme)
+  }, [theme])
 
   useEffect(() => {
     setFiltered(todo)
@@ -54,25 +61,24 @@ function App() {
   }
 
   // render the task into the ul
-  const renderToDo = filtered.map((task) => (
+  const renderToDo = filtered.map((task, index) => (
     <ToDoTiles
       key={task.id}
       {...task}
       todo={todo}
       setToDo={setToDo}
       theme={theme}
+      isFirst={index === 0} // Check if it's the first element
     />
   ))
   // clear complete todo task
   const onClearCompleteClick = () => {
+    // filter todo list for task that are not completed (false). This would remove the task with isComplete === true
     setToDo(todo.filter((task) => !task.isComplete))
-    setCompletedTask(todo.filter((task) => task.isComplete))
   }
 
-  console.log(completedTask)
-  // localStorage.clear()
   return (
-    <main className="text-gray-700">
+    <>
       {/* Header */}
       <Header
         toggleTheme={toggleTheme}
@@ -82,37 +88,28 @@ function App() {
         setText={setText}
       />
       {/* task goes here */}
-      {filtered.length ? (
-        <section className="flex flex-col items-center my-4 text-lg ">
-          <ul
-            className=" rounded-lg border border-slate-400 bg-gray-50 divide-slate-400 divide-y text-sm md:text-base
-        "
-          >
-            {renderToDo}
-            {/* dashbaord display */}
-            <li className="flex justify-between px-5 items-center w-full h-14 text-center transition-all duration-400 font-semibold md:hidden">
-              <p>
-                {todo.length} item{todo.length > 1 ? "s" : ""} left
-              </p>
-              <p
-                className="cursor-pointer hover:scale-110 hover:underline hover:text-rose-600 underline-offset-4 transition-all duration-300 ease-in-out"
-                onClick={onClearCompleteClick}
-              >
-                Clear Completed
-              </p>
-            </li>
-          </ul>
-        </section>
-      ) : (
-        <NoTask />
-      )}
+      <div className="w-full m-w-md px-4">
+        {filtered.length ? (
+          <section className="flex flex-col items-center my-4 mx-auto text-lg max-w-md">
+            <ul className="rounded-lg border h-auto w-full border-slate-400 bg-gray-50 divide-slate-400 divide-y text-sm md:text-base">
+              {renderToDo}
+              <FooterDashboard
+                todo={todo}
+                onClearCompleteClick={onClearCompleteClick}
+              />
+            </ul>
+          </section>
+        ) : (
+          <NoTask />
+        )}
+        <Footer
+          setFiltered={setFiltered}
+          todo={todo}
+          completedTask={completedTask}
+        />
+      </div>
       {/* Footer goes here */}
-      <Footer
-        setFiltered={setFiltered}
-        todo={todo}
-        completedTask={completedTask}
-      />
-    </main>
+    </>
   )
 }
 

@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import binLight from "../assets/delete-bin-fill.svg"
-import binDark from "../assets/delete-bin-line.svg"
+import binDark from "../assets/delete-bin-fill.svg"
+import binLight from "../assets/delete-bin-line.svg"
 import iconTick from "../assets/icon-check.svg"
 
-const ToDoTiles = ({ taskName, id, setToDo, todo, theme }) => {
+const ToDoTiles = ({ taskName, id, setToDo, todo, theme, isFirst }) => {
   const [isClicked, setIsClicked] = useState(false)
 
   const handleTaskClick = (id) => {
@@ -33,25 +33,38 @@ const ToDoTiles = ({ taskName, id, setToDo, todo, theme }) => {
   // if matches, we want to update(map) todo (setToDo) to not include that id
 
   return (
-    <li className="flex gap-4 px-5 items-center w-96 h-14 transition-all duration-400 font-semibold">
+    <li
+      className={`flex gap-4 px-5 py-3 items-center transition-all duration-400 font-semibold dark:bg-slate-700 dark:text-slate-400 rounded-bl-none rounded-br-none ${
+        isFirst ? "rounded-t-lg" : ""
+      }`}
+    >
       {/* button to close task */}
-      <button
-        className={`w-7 h-7 flex items-center justify-center rounded-full bg-transparent border ${
-          isClicked
-            ? "bg-no-repeat bg-contain bg-center bg-gradient-to-br from-blue-400 to-pink-500"
-            : ""
-        }`}
-        onClick={() => handleTaskClick(id)}
-      >
-        {isClicked ? (
-          <img src={iconTick} className="w-3 absolute animate-pop" />
-        ) : (
-          ""
-        )}
-      </button>
+      <div className="button-wrapper">
+        {" "}
+        <button
+          className={`w-7 h-7 flex items-center justify-center rounded-full bg-transparent border-2 ${
+            isClicked
+              ? "bg-no-repeat bg-contain bg-center bg-gradient-to-br from-blue-400 to-pink-500"
+              : ""
+          }`}
+          onClick={() => handleTaskClick(id)}
+        >
+          {isClicked ? (
+            <img src={iconTick} className="w-3 absolute animate-pop" />
+          ) : (
+            ""
+          )}
+        </button>
+      </div>
 
       {/* task name */}
-      <p className={`${isClicked ? "line-through" : ""}`}>{taskName}</p>
+      <p
+        className={`break-words overflow-auto text-base ${
+          isClicked ? "line-through" : ""
+        }`}
+      >
+        {taskName}
+      </p>
       {/* remove task from view */}
       <img
         src={theme === "light" ? binLight : binDark}
