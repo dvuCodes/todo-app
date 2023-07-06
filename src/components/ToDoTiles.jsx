@@ -14,6 +14,8 @@ const ToDoTiles = ({
 }) => {
   const [isClicked, setIsClicked] = useState(false)
 
+  // dnd
+
   const handleTaskClick = (id) => {
     setIsClicked(!isClicked)
     const updateTask = todo.map((task) => {
@@ -32,12 +34,41 @@ const ToDoTiles = ({
     setToDo((preList) => todo.filter((task) => task.id !== id))
   }
 
-  console.log(isComplete)
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData("text/plain", id)
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    const droppedItemId = e.dataTransfer.getData("text/plain")
+    const updatedTodo = todo.slice() // Create a copy of the todo array
+    const droppedItemIndex = updatedTodo.findIndex(
+      (item) => item.id === droppedItemId
+    )
+    const currentTaskIndex = updatedTodo.findIndex((item) => item.id === id)
+
+    // Rearrange the elements
+    ;[updatedTodo[droppedItemIndex], updatedTodo[currentTaskIndex]] = [
+      updatedTodo[currentTaskIndex],
+      updatedTodo[droppedItemIndex],
+    ]
+
+    setToDo(updatedTodo)
+  }
+
   return (
     <li
       className={`flex gap-4 px-5 py-3 items-center transition-all duration-400 font-semibold dark:bg-slate-700 dark:text-slate-400 rounded-bl-none rounded-br-none ${
         isFirst ? "rounded-t-lg" : ""
       } `}
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       {/* button to close task */}
       <div className="button-wrapper">
@@ -62,7 +93,7 @@ const ToDoTiles = ({
       <p
         className={`break-words overflow-auto ${
           isComplete === true ? "line-through" : ""
-        }`}
+        } cursor-pointer`}
       >
         {taskName}
       </p>

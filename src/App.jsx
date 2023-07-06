@@ -72,6 +72,7 @@ function App() {
       theme={theme}
       isFirst={index === 0} // Check if it's the first element
       isComplete={task.isComplete}
+      draggable
     />
   ))
   // clear complete todo task
@@ -101,6 +102,9 @@ function App() {
                 onClearCompleteClick={onClearCompleteClick}
               />
             </ul>
+            <p className="text-sm my-4 text-gray-100">
+              You can drag and drop your task to rearrange them!
+            </p>
           </section>
         ) : (
           <NoTask />
